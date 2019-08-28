@@ -6,8 +6,8 @@ productionDeployment:
   replicaCount: 2
   weight: 100
   image:
-    repository: myacrepo.azurecr.io/bookinfo/productpage
-    tag: 83
+    repository: istiosampleacr.azurecr.io/istiosample/productpage
+    tag: 35
     pullPolicy: IfNotPresent
 
 
@@ -15,8 +15,8 @@ canaryDeployment:
   replicaCount: 0
   weight: 0
   image:
-    repository: myacrepo.azurecr.io/bookinfo/productpage
-    tag: 83
+    repository: istiosampleacr.azurecr.io/istiosample/productpage
+    tag: 35
     pullPolicy: IfNotPresent
 
 
