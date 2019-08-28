@@ -56,7 +56,7 @@ spec:
       serviceAccountName: istiosample-productpage
       containers:
       - name: productpage
-        image: istiosampleacr.azurecr.io/istiosample/productpage:35
+        image: istiosampleacr.azurecr.io/istiosample/productpage:39
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 9080

@@ -7,19 +7,20 @@ metadata:
     release: {{ .Release.Name }}
 spec:
   hosts:
-  - {{ .Values.service.name }}.{{ .Release.Namespace }}.svc.cluster.local
+  #- {{ .Values.service.name }}.{{ .Release.Namespace }}.svc.cluster.local
+  - "*"
   gateways:
   - product-page
   http:
   - route:
     - destination:
-        host: {{ .Values.service.name }}.{{ .Release.Namespace }}.svc.cluster.local
+        host: {{ .Values.service.name }}
         subset: production
         port:
           number: {{ .Values.service.port }}
       weight: {{ .Values.productionDeployment.weight }}
     - destination:
-        host: {{ .Values.service.name }}.{{ .Release.Namespace }}.svc.cluster.local
+        host: {{ .Values.service.name }}
         subset: canary
         port:
           number: {{ .Values.service.port }}

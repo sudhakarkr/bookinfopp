@@ -1,0 +1,177 @@
+---
+# Source: productpage/templates/service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: product-page-svc
+  labels:
+    app: productpage
+    chart: productpage-0.1.0
+    release: release-name
+    heritage: Tiller
+spec:
+  type: 
+  ports:
+    - port: 9080
+      targetPort: http
+      protocol: TCP
+      name: http
+  selector:
+    app: productpage
+    release: release-name
+
+---
+# Source: productpage/templates/deployment.yaml
+apiVersion: apps/v1beta2
+kind: Deployment
+metadata:
+  name: release-name-productpage
+  labels:
+    app: productpage
+    canary: "false"
+    chart: productpage-0.1.0
+    release: release-name
+    heritage: Tiller
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: productpage
+      canary: "false"
+      release: release-name
+  template:
+    metadata:
+      labels:
+        app: productpage
+        canary: "false"
+        release: release-name
+    spec:
+      containers:
+        - name: productpage
+          image: "istiosampleacr.azurecr.io/istiosample/productpage:35"
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: http
+              containerPort: 9080
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /
+              port: http
+          readinessProbe:
+            httpGet:
+              path: /
+              port: http
+
+---
+# Source: productpage/templates/deploymentcanary.yaml
+apiVersion: apps/v1beta2
+kind: Deployment
+metadata:
+  name: release-name-productpagecanary
+  labels:
+    app: productpage
+    canary: "true"
+    chart: productpage-0.1.0
+    release: release-name
+    heritage: Tiller
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: productpage
+      canary: "true"
+      release: release-name
+  template:
+    metadata:
+      labels:
+        app: productpage
+        canary: "true"
+        release: release-name
+    spec:
+      containers:
+        - name: productpagecanary
+          image: "istiosampleacr.azurecr.io/istiosample/productpage:39"
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: http
+              containerPort: 9080
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /
+              port: http
+          readinessProbe:
+            httpGet:
+              path: /
+              port: http
+
+---
+# Source: productpage/templates/istioDestinationRule.yaml
+apiVersion: networking.istio.io/v1alpha3
+kind: DestinationRule
+metadata:
+  name: product-page-destination-rule
+  labels:
+    chart: productpage-0.1.0
+    release: release-name
+spec:
+  host: product-page-svc.istiosample.svc.cluster.local
+  trafficPolicy:
+    tls:
+      mode: ISTIO_MUTUAL
+  subsets:
+  - name: production
+    labels:
+      canary: "false"
+  - name: canary
+    labels:
+      canary: "true"
+
+---
+# Source: productpage/templates/istioGateway.yaml
+apiVersion: networking.istio.io/v1alpha3
+kind: Gateway
+metadata:
+  name: product-page
+  labels:
+    chart: productpage-0.1.0
+    release: release-name
+spec:
+  selector:
+    istio: ingressgateway
+  servers:
+  - port:
+      number: 80
+      name: http
+      protocol: HTTP
+    hosts:
+    - "*"
+---
+# Source: productpage/templates/istioVirtualService.yaml
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: product-page-virtual-service
+  labels:
+    chart: productpage-0.1.0
+    release: release-name
+spec:
+  hosts:
+  - "*"
+  gateways:
+  - product-page
+  http:
+  - route:
+    - destination:
+        host: product-page-svc
+        subset: production
+        port:
+          number: 9080
+      weight: 100
+    - destination:
+        host: product-page-svc
+        subset: canary
+        port:
+          number: 9080
+      weight: 0
