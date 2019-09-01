@@ -8,10 +8,10 @@ AZ_K8S_VERSION=1.13.10
 AZ_ACR_NAME=istioACR
 
 echo "Create a Resource Group"
-az group create --name $AZ_RELEASE_GROUP --location $AZ_LOCATION
+az group create --name $AZ_RELEASE_GROUP --location "West Europe"
 
 echo "Create a cluster"
-az aks create --resource-group $AZ_RELEASE_GROUP --name $AZ_AKS_CLUSTER_NAME --node-count $AZ_AKS_NODECOUNT --kubernetes-version $AZ_K8S_VERSION --generate-ssh-keys
+az aks create --resource-group $AZ_RELEASE_GROUP --name $AZ_AKS_CLUSTER_NAME --node-count 3 --kubernetes-version $AZ_K8S_VERSION --generate-ssh-keys
 
 echo "Create an  Azure Container Registry"
 az acr create -n $AZ_ACR_NAME -g $AZ_RELEASE_GROUP -l $AZ_AKS_CLUSTER_NAME --sku Basic --admin-enabled true
