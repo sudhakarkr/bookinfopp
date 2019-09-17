@@ -20,13 +20,13 @@ steps:
 
 - task: Docker@2
   inputs:
-    containerRegistry: 'istioSampleACRConn'
+    containerRegistry: 'azureACRConn'
     repository: 'istiosample/productpage'
     command: 'build'
     Dockerfile: '**/Dockerfile'
 
 - task: Docker@2
   inputs:
-    containerRegistry: 'istioSampleACRConn'
+    containerRegistry: 'azureACRConn'
     repository: 'istiosample/productpage'
     command: 'push'
