@@ -373,3 +373,7 @@ while : ;do export GREP_COLOR='1;33';curl -s  104.42.142.214 \
 | grep --color=always -o '<title>.*</title>' "<title>Simple Bookstore App v2</title>"; sleep 1;\ done
 
 
+
+helm del --purge istiosamplerelease;
+
+helm status istiosamplerelease;
