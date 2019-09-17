@@ -83,3 +83,36 @@ helm install install/kubernetes/helm/istio --name istio --namespace istio-system
  --set kiali.enabled=true
 
 
+1. Grant the AKS-generated service principal pull access to our ACR, the AKS cluster will be able to pull images of our ACR
+
+$CLIENT_ID=$(az aks show -g istioSampleRG -n istioSampleCluster --query "servicePrincipalProfile.clientId" -o tsv)
+$ACR_ID=$(az acr show -n istioSampleACR -g istioSampleRG --query "id" -o tsv)
+
+`` az role assignment create --assignee $CLIENT_ID --role acrpull --scope $ACR_ID
+
+
+- 2. Create a specific Service Principal for our Azure DevOps pipelines to be able to push and pull images and charts of our ACR
+
+$ registryPassword=$(az ad sp create-for-rbac -n istioSampleACR-push --scopes $ACR_ID --role acrpush --query password -o tsv)
+
+# Important note: you will need this registryPassword value later in this blog article in the Create a Build pipeline and Create a Release pipeline sections
+
+$ echo $registryPassword
+
+
+40.118.26.184:81
+
+export INGRESS_HOST=$(kubectl -n istio-system get service istio-ingressgateway -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
+export INGRESS_PORT=$(kubectl -n istio-system get service istio-ingressgateway -o jsonpath='{.spec.ports[?(@.name=="http2")].port}')
+export SECURE_INGRESS_PORT=$(kubectl -n istio-system get service istio-ingressgateway -o jsonpath='{.spec.ports[?(@.name=="https")].port}')
+
+
+kubectl exec -it $(kubectl get pod -l app=productpage -o jsonpath='{.items[0].metadata.name}') -- curl productpage:9080/productpage | grep -o "<title>.*</title>"
+<title>Simple Bookstore App</title>
+
+
+kubectl exec -it $(kubectl get pod -l app=ratings -o jsonpath='{.items[0].metadata.name}') -c ratings -- curl localhost:9080/productpage | grep -o "<title>.*</title>"
+
+kubectl get svc istio-ingressgateway -n istio-system
+
+

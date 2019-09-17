@@ -365,11 +365,11 @@ while : ;do export GREP_COLOR='1;33';curl -s  40.118.26.184 \
 
  while : ;do curl -s  40.118.26.184 | grep -o '<title>.*</title>'; sleep 1; done
 
-while : ;do export GREP_COLOR='1;33';curl -s  40.118.26.184 | grep --color=always -o '<title>.*</title>'; sleep 1; done
+while : ;do export GREP_COLOR='1;33';curl -s  104.42.142.214 | grep --color=always -o '<title>.*</title>'; sleep 1; done
 
-while : ;do export GREP_COLOR='1;33';curl -s  40.118.26.184 \
-| grep --color=always -o '<title>.*</title>' "<title>Simple Bookstore App</title>"; export \ GREP_COLOR='1;36';\
- while : ;curl -s  40.118.26.184 \
- | grep --color=always -o '<title>.*</title>' "<title>Simple Bookstore App v2</title>"; sleep 1;\ done
+while : ;do export GREP_COLOR='1;33';curl -s  104.42.142.214 \
+| grep --color=always -o '<title>.*</title>' "<title>Simple Bookstore App v1</title>"; export GREP_COLOR='1;36'; \
+| curl -s  104.42.142.214 \
+| grep --color=always -o '<title>.*</title>' "<title>Simple Bookstore App v2</title>"; sleep 1;\ done
 
 

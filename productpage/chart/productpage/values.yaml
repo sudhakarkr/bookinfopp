@@ -7,7 +7,7 @@ productionDeployment:
   weight: 100
   image:
     repository: istiosampleacr.azurecr.io/istiosample/productpage
-    tag: 35
+    tag: 65
     pullPolicy: IfNotPresent
 
 
@@ -16,7 +16,7 @@ canaryDeployment:
   weight: 0
   image:
     repository: istiosampleacr.azurecr.io/istiosample/productpage
-    tag: 35
+    tag: 65
     pullPolicy: IfNotPresent
 
 
