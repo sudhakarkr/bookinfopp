@@ -6,8 +6,8 @@ productionDeployment:
   replicaCount: 2
   weight: 100
   image:
-    repository: istiosampleacr.azurecr.io/istiosample/productpage
-    tag: 65
+    repository: istioacr.azurecr.io/istiosample/productpage
+    tag: 72
     pullPolicy: IfNotPresent
 
 
@@ -15,8 +15,8 @@ canaryDeployment:
   replicaCount: 0
   weight: 0
   image:
-    repository: istiosampleacr.azurecr.io/istiosample/productpage
-    tag: 65
+    repository: istioacr.azurecr.io/istiosample/productpage
+    tag: 72
     pullPolicy: IfNotPresent
 
 

@@ -1,6 +1,7 @@
 #!/bin/bash
 
 # Create Namespace and enable istio injection
+kubectl delete ns istiosample
 kubectl create ns istiosample
 
 kubectl label namespace istiosample istio-injection=enabled
@@ -377,3 +378,10 @@ while : ;do export GREP_COLOR='1;33';curl -s  104.42.142.214 \
 helm del --purge istiosamplerelease;
 
 helm status istiosamplerelease;
+
+
+
+
+104.209.33.171
+
+while : ;do curl -s  104.209.33.171 | grep -o '<title>.*</title>'; sleep 1; done
