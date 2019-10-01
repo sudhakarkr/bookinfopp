@@ -8,13 +8,13 @@ AZ_K8S_VERSION=1.13.10
 AZ_ACR_NAME=istioACR
 
 echo "Create a Resource Group"
-az group create --name istioRG --location "West Europe"
+az group create --name istioRG --location "West US"
 
 echo "Create a cluster"
 az aks create --resource-group istioRG --name istioAKSCluster --node-count 3 --kubernetes-version 1.13.10 --generate-ssh-keys
 
 echo "Create an  Azure Container Registry"
-az acr create -n istioACR -g istioRG -l "West Europe" --sku Basic --admin-enabled true
+az acr create -n istioACR -g istioRG -l "West US" --sku Basic --admin-enabled true
 
 echo "Login into AKS"
 az aks get-credentials -n istioAKSCluster -g istioRG --overwrite-existing 
@@ -44,8 +44,8 @@ kubectl get jobs -n istio-system
 GRAFANA_USERNAME=$(echo -n "grafana" | base64)
 GRAFANA_PASSPHRASE=$(echo -n "grAfAnA" | base64)
 
-apiVersion: v1
 cat <<EOF | kubectl apply -f -
+apiVersion: v1
 kind: Secret
 metadata:
   name: grafana
@@ -85,8 +85,8 @@ helm install install/kubernetes/helm/istio --name istio --namespace istio-system
 
 1. Grant the AKS-generated service principal pull access to our ACR, the AKS cluster will be able to pull images of our ACR
 
-$CLIENT_ID=$(az aks show -g istioSampleRG -n istioSampleCluster --query "servicePrincipalProfile.clientId" -o tsv)
-$ACR_ID=$(az acr show -n istioSampleACR -g istioSampleRG --query "id" -o tsv)
+$CLIENT_ID=$(az aks show -g istioRG -n istioAKSCluster --query "servicePrincipalProfile.clientId" -o tsv)
+$ACR_ID=$(az acr show -n istioACR -g istioRG --query "id" -o tsv)
 
 `` az role assignment create --assignee $CLIENT_ID --role acrpull --scope $ACR_ID
 
@@ -99,6 +99,7 @@ $ registryPassword=$(az ad sp create-for-rbac -n istioSampleACR-push --scopes $A
 
 $ echo $registryPassword
 
+6c42ae4a-d348-463d-bd0e-9e96968958e8
 
 40.118.26.184:81
 
