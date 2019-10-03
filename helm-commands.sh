@@ -12,7 +12,7 @@ helm install -f ./productpage/chart/productpage/values.yaml --namespace=istiosam
 
 
 # STEADY STATE - 100 percent traffic prod
-helm upgrade  --install --namespace istiosample --values ./productpage/chart/productpage/values.yaml --set productionDeployment.image.repository=istiosampleacr.azurecr.io/istiosample/productpage,productionDeployment.image.tag=35,productionDeployment.weight=100,productionDeployment.replicaCount=2,canaryDeployment.image.repository=istiosampleacr.azurecr.io/istiosample/productpage,canaryDeployment.image.tag=35,canaryDeployment.replicaCount=0,canaryDeployment.weight=0 --wait istiosamplerelease ./productpage/chart/productpage
+helm upgrade  --install --namespace istiosample --values ./productpage/chart/productpage/values.yaml --set productionDeployment.image.repository=istioacr.azurecr.io/istiosample/productpage,productionDeployment.image.tag=72,productionDeployment.weight=100,productionDeployment.replicaCount=2,canaryDeployment.image.repository=istioacr.azurecr.io/istiosample/productpage,canaryDeployment.image.tag=72,canaryDeployment.replicaCount=0,canaryDeployment.weight=0 --wait istiosamplerelease ./productpage/chart/productpage
 
 # CANARY 10 percent
 helm upgrade  --install --namespace istiosample --values ./productpage/chart/productpage/values.yaml --set productionDeployment.image.repository=istiosampleacr.azurecr.io/istiosample/productpage,productionDeployment.image.tag=35,productionDeployment.weight=90,productionDeployment.replicaCount=2,canaryDeployment.image.repository=istiosampleacr.azurecr.io/istiosample/productpage,canaryDeployment.image.tag=39,canaryDeployment.replicaCount=2,canaryDeployment.weight=10 --wait istiosamplerelease ./productpage/chart/productpage
